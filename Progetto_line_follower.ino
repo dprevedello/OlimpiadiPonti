@@ -2,6 +2,7 @@
 
 Servo destra;
 Servo sinistra;
+int x = 0;
 
 int const destra_pin = 8; // il destro va al contrario
 int const sinistra_pin = 9;
@@ -38,16 +39,31 @@ void vaiASinistra90() {
 
 void vaiADestra() { // trovare il giusto rapporto
 
-  destra.write(89);
+  destra.write(81);
   sinistra.write(180);
 }
 
 void vaiASinistra(){  // trovare il giusto rapporto
 
   destra.write(0);
-  sinistra.write(89);
+  sinistra.write(94);
 }
 
 void loop() {
-  staiFermo();
+
+  while (true) {
+    if (x == 0) {
+      vaiAvanti();
+      delay(3500);
+      vaiADestra();
+      delay(1500);
+      vaiASinistra();
+      delay(1500);
+      x ++;
+      }
+      else {
+        staiFermo();
+        }
+    }
+  
 }
