@@ -1,22 +1,34 @@
 #include <Servo.h>
 
+// Oggetti di tipo Servo
 Servo motore_destra;
 Servo motore_sinistra;
 
+// Collegamenti con in pin
+int const motore_destra_pin = 8; // il destro va al contrario
+int const motore_sinistra_pin = 9; // il sinistro è giusto
+int const sensore_sinistra_pin = A2;
+int const sensore_centro_pin = A1;
+int const sensore_destra_pin = A0;
 
-int const destra_pin = 8; // il destro va al contrario
-int const sinistra_pin = 9; // il sinistro è giusto
-
+// Variabili che leggono i sensori
 int sensore_sinistra = 0;
 int sensore_centro = 0;
 int sensore_destra = 0;
+
+// Variabile per gestire la soglia tra nero e bianco
 int soglia = 200;
 
+// Variabile che ricorda il movimento effettuato precedentemente
 int ritorno = 0;
 
 void setup() {
-  motore_destra.attach(destra_pin);
-  motore_sinistra.attach(sinistra_pin);
+  motore_destra.attach(motore_destra_pin);
+  motore_sinistra.attach(motore_sinistra_pin);
+  
+  pinMode(sensore_sinistra_pin, INPUT);
+  pinMode(sensore_centro_pin, INPUT);
+  pinMode(sensore_destra_pin, INPUT);
 
 }
 
@@ -58,9 +70,9 @@ void vaiASinistra(){  // trovare il giusto rapporto
 
 void loop() {
 
-  sensore_sinistra = analogRead(A2);
-  sensore_centro = analogRead(A1);
-  sensore_destra = analogRead(A0);
+  sensore_sinistra = analogRead(sensore_sinistra_pin);
+  sensore_centro = analogRead(sensore_centro_pin);
+  sensore_destra = analogRead(sensore_destra_pin);
 
 
   // Se vede tutto nero o tutto bianco
