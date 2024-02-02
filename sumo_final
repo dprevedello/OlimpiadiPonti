@@ -1,0 +1,100 @@
+#include <Servo.h>
+int verifica;
+Servo rightServo;
+Servo leftServo;
+const int soglia = 450;
+const int leftServoPin = 8;
+const int rightServoPin = 9;
+const int leftSensorPin = 5;
+const int middleSensorPin = 6;
+const int rightSensorPin = 7;
+const int center = A1;
+const int left = A2;
+const int right = A0;
+const int leftTrigPin = 3;
+const int frontTrigPin = 4;
+const int rightTrigPin = 2;
+const int leftEchoPin = 22;
+const int frontEchoPin = 23;
+const int rightEchoPin = 10;
+
+int centro;
+int destra;
+int sinistra;
+
+
+float getDistance(int trig, int echo) {
+  digitalWrite(trig, LOW);
+  delayMicroseconds(2);
+  digitalWrite(trig, HIGH);
+  delayMicroseconds(10);
+  digitalWrite(trig, LOW);
+  long duration = pulseIn(echo, HIGH,6000);
+  float distance = duration * 0.034 / 2;
+  return distance;
+}
+int frontDistance; int rightDistance; int leftDistance;
+
+void setup() {
+  leftServo.attach(leftServoPin);
+  rightServo.attach(rightServoPin);
+  pinMode(leftSensorPin, INPUT);
+  pinMode(middleSensorPin, INPUT);
+  pinMode(rightSensorPin, INPUT);
+  Serial.begin(9600);
+   leftServo.write(90);
+    rightServo.write(90);
+  delay(5000);
+ 
+ 
+}
+
+
+void loop() {
+  centro = analogRead(center);
+  destra = analogRead(right);
+  sinistra = analogRead(left);
+ // frontDistance = getDistance(frontTrigPin, frontEchoPin);
+ // rightDistance = getDistance(rightTrigPin, rightEchoPin);
+  //leftDistance = getDistance(leftTrigPin, leftEchoPin);
+ /* Serial.print("Front: ");
+  Serial.print(frontDistance);
+  Serial.print(", Right: ");
+  Serial.print(rightDistance);
+  Serial.print(", Left: ");
+  Serial.println(leftDistance);
+  /* Serial.print("Sinistra: ");
+  Serial.print(sinistra);
+  Serial.print(" Centro: ");
+  Serial.print(centro);
+  Serial.print(" Destra: ");
+  Serial.print(destra);*/
+ // Serial.println();
+  if (centro > soglia && sinistra > soglia && destra > soglia) {   //DRITTO
+    leftServo.write(0);
+    rightServo.write(180);
+  } else if ((centro > soglia && sinistra < soglia && destra > soglia) || (centro < soglia && sinistra < soglia && destra > soglia)) {
+    leftServo.write(180);
+    rightServo.write(0);
+    delay(300);
+    leftServo.write(180);
+    rightServo.write(180);
+    delay(300);
+  } else if ((centro > soglia && sinistra > soglia && destra < soglia) || (centro < soglia && sinistra > soglia && destra < soglia)) {
+    leftServo.write(180);
+    rightServo.write(0);
+    delay(300);
+    leftServo.write(0);
+    rightServo.write(0);
+    delay(300);
+  } else if (centro < soglia && sinistra < soglia && destra < soglia) {
+    leftServo.write(180);
+    rightServo.write(0);
+    delay(300);
+    leftServo.write(0);
+    rightServo.write(0);
+    delay(300);
+  }
+ 
+  //delay(50);
+}
