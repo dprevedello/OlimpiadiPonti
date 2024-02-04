@@ -50,6 +50,10 @@ int scarico;
 int carico;
 
 
+
+int x = 0;
+
+
 void setup() {
   
   pwm0.begin();
@@ -57,6 +61,82 @@ void setup() {
   pwm0.setPWMFreq(SERVO_FREQ);
   delay(10);
   Serial.begin(9600);
+
+  
+
+}
+
+void balletto() {
+
+  angolo1 = 90.0;  //  Posizione di partenza
+  posizione1 = map(int(angolo1), 0, 180, SERVOMIN, SERVOMAX);  //  Da mettere sempre
+  pwm0.setPWM(mot1, 0, posizione1);  // Da mettere sempre
+
+  angolo2 = 85.0;  //  Posizione di partenzamo
+  posizione2 = map(int(angolo2), 0, 180, SERVOMIN, SERVOMAX); //  Accetta solo valori interi
+  pwm0.setPWM(mot2, 0, posizione2);
+
+  angolo6 = 100.0; //  Posizione di partenza
+  posizione6 = map(int(angolo6), 0, 180, SERVOMIN, SERVOMAX);
+  pwm0.setPWM(mot6, 0, posizione6);
+
+  angolo3 = 93.0;  //  Posizione di partenza
+  posizione3 = map(int(angolo3), 0, 180, SERVOMIN, SERVOMAX);
+  pwm0.setPWM(mot3, 0, posizione3);
+
+  delay(2000);
+
+  for (int i = 1; i <= step; i ++) {
+
+    angolo2 = angolo2 + 2;
+    posizione2 = map(int(angolo2), 0, 180, SERVOMIN, SERVOMAX); //  Accetta solo valori interi
+    pwm0.setPWM(mot2, 0, posizione2);
+
+    delay(30);
+  }
+
+  for (int i = 1; i <= step; i ++) {
+
+    angolo3 = angolo3 - 2;
+    posizione3 = map(int(angolo3), 0, 180, SERVOMIN, SERVOMAX); //  Accetta solo valori interi
+    pwm0.setPWM(mot3, 0, posizione3);
+
+    delay(30);
+  }
+
+  angolo6 = 10.0; //  Posizione di partenza
+  posizione6 = map(int(angolo6), 0, 180, SERVOMIN, SERVOMAX);
+  pwm0.setPWM(mot6, 0, posizione6);
+
+  delay(50);
+
+  angolo6 = 100.0; //  Posizione di partenza
+  posizione6 = map(int(angolo6), 0, 180, SERVOMIN, SERVOMAX);
+  pwm0.setPWM(mot6, 0, posizione6);
+
+
+
+  for (int i = 1; i <= step; i ++) {
+
+    angolo3 = angolo3 + 2;
+    posizione3 = map(int(angolo3), 0, 180, SERVOMIN, SERVOMAX); //  Accetta solo valori interi
+    pwm0.setPWM(mot3, 0, posizione3);
+
+    delay(30);
+  }
+
+  for (int i = 1; i <= step; i ++) {
+
+    angolo2 = angolo2 - 2;
+    posizione2 = map(int(angolo2), 0, 180, SERVOMIN, SERVOMAX); //  Accetta solo valori interi
+    pwm0.setPWM(mot2, 0, posizione2);
+
+    delay(30);
+  }
+
+
+  delay(2000);
+
 }
 
 void eretta_senza_presa() {
@@ -87,7 +167,7 @@ void eretta_senza_presa() {
   posizione6 = map(int(angolo6), 0, 180, SERVOMIN, SERVOMAX);
   pwm0.setPWM(mot6, 0, posizione6);
 
-  delay(1000);
+  delay(500);
 
 }
 
@@ -119,7 +199,7 @@ void eretta_con_presa() {
     posizione6 = map(int(angolo6), 0, 180, SERVOMIN, SERVOMAX);
     pwm0.setPWM(mot6, 0, posizione6);
 
-    delay(1000);
+    delay(500);
 
 }
 
@@ -174,7 +254,7 @@ void prendi() {
   posizione6 = map(int(angolo6), 0, 180, SERVOMIN, SERVOMAX);
   pwm0.setPWM(mot6, 0, posizione6);
 
-  delay(2000);
+  delay(1000);
   
   // Ritorno
 
@@ -208,7 +288,7 @@ void prendi() {
     delay(20);
   }
 
-  delay(1000);
+  delay(500);
 
 }
 
@@ -261,7 +341,7 @@ void posa() {
   posizione6 = map(int(angolo6), 0, 180, SERVOMIN, SERVOMAX);
   pwm0.setPWM(mot6, 0, posizione6);
 
-  delay(2000);
+  delay(1000);
   
   // Ritorno
 
@@ -295,7 +375,7 @@ void posa() {
     delay(20);
   }
 
-  delay(1000);
+  delay(500);
 
 }
 
@@ -303,7 +383,13 @@ void posa() {
 
 void loop() {
 
-  carico = digitalRead(carico_pin);
+  if (x == 0) {
+    balletto();
+    x = 1;
+  }
+  else {
+
+    carico = digitalRead(carico_pin);
   scarico = digitalRead(scarico_pin);
 
   /* Serial.print("Carico: ");
@@ -311,6 +397,8 @@ void loop() {
   Serial.print("Scarico: ");
   Serial.print(scarico);
   delay(2000);  */
+
+  
 
   if (carico == 1) {
     eretta_senza_presa();
@@ -326,7 +414,7 @@ void loop() {
     eretta_senza_presa();
   }
 
-
+  }
 
 }
   
