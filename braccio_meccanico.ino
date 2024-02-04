@@ -49,9 +49,9 @@ int const carico_pin = 3;
 int scarico;
 int carico;
 
+// Variabile che controlla se il braccio ha ballato
 
-
-int x = 0;
+bool haiBallato = false;
 
 
 void setup() {
@@ -68,67 +68,79 @@ void setup() {
 
 void balletto() {
 
-  angolo1 = 90.0;  //  Posizione di partenza
-  posizione1 = map(int(angolo1), 0, 180, SERVOMIN, SERVOMAX);  //  Da mettere sempre
-  pwm0.setPWM(mot1, 0, posizione1);  // Da mettere sempre
+  //  Posizione di partenza
+  
+  angolo1 = 90.0;
+  posizione1 = map(int(angolo1), 0, 180, SERVOMIN, SERVOMAX);
+  pwm0.setPWM(mot1, 0, posizione1); 
 
-  angolo2 = 85.0;  //  Posizione di partenzamo
-  posizione2 = map(int(angolo2), 0, 180, SERVOMIN, SERVOMAX); //  Accetta solo valori interi
+  angolo2 = 85.0;
+  posizione2 = map(int(angolo2), 0, 180, SERVOMIN, SERVOMAX);
   pwm0.setPWM(mot2, 0, posizione2);
 
-  angolo6 = 100.0; //  Posizione di partenza
+  angolo6 = 100.0;
   posizione6 = map(int(angolo6), 0, 180, SERVOMIN, SERVOMAX);
   pwm0.setPWM(mot6, 0, posizione6);
 
-  angolo3 = 93.0;  //  Posizione di partenza
+  angolo3 = 93.0;
   posizione3 = map(int(angolo3), 0, 180, SERVOMIN, SERVOMAX);
   pwm0.setPWM(mot3, 0, posizione3);
 
   delay(2000);
 
+  // Il motore 2 va giu
+  
   for (int i = 1; i <= step; i ++) {
 
     angolo2 = angolo2 + 2;
-    posizione2 = map(int(angolo2), 0, 180, SERVOMIN, SERVOMAX); //  Accetta solo valori interi
+    posizione2 = map(int(angolo2), 0, 180, SERVOMIN, SERVOMAX);
     pwm0.setPWM(mot2, 0, posizione2);
 
     delay(30);
   }
 
+  // Il motore 3 va su
+
   for (int i = 1; i <= step; i ++) {
 
     angolo3 = angolo3 - 2;
-    posizione3 = map(int(angolo3), 0, 180, SERVOMIN, SERVOMAX); //  Accetta solo valori interi
+    posizione3 = map(int(angolo3), 0, 180, SERVOMIN, SERVOMAX);
     pwm0.setPWM(mot3, 0, posizione3);
 
     delay(30);
   }
 
-  angolo6 = 10.0; //  Posizione di partenza
+  // Chiudi presa
+
+  angolo6 = 10.0;
   posizione6 = map(int(angolo6), 0, 180, SERVOMIN, SERVOMAX);
   pwm0.setPWM(mot6, 0, posizione6);
 
   delay(50);
 
-  angolo6 = 100.0; //  Posizione di partenza
+  // Apri presa
+
+  angolo6 = 100.0;
   posizione6 = map(int(angolo6), 0, 180, SERVOMIN, SERVOMAX);
   pwm0.setPWM(mot6, 0, posizione6);
 
-
+  // Il motore 3 ritorna giu
 
   for (int i = 1; i <= step; i ++) {
 
     angolo3 = angolo3 + 2;
-    posizione3 = map(int(angolo3), 0, 180, SERVOMIN, SERVOMAX); //  Accetta solo valori interi
+    posizione3 = map(int(angolo3), 0, 180, SERVOMIN, SERVOMAX);
     pwm0.setPWM(mot3, 0, posizione3);
 
     delay(30);
   }
 
+  // Il motore 2 torna su
+
   for (int i = 1; i <= step; i ++) {
 
     angolo2 = angolo2 - 2;
-    posizione2 = map(int(angolo2), 0, 180, SERVOMIN, SERVOMAX); //  Accetta solo valori interi
+    posizione2 = map(int(angolo2), 0, 180, SERVOMIN, SERVOMAX);
     pwm0.setPWM(mot2, 0, posizione2);
 
     delay(30);
@@ -141,14 +153,14 @@ void balletto() {
 
 void eretta_senza_presa() {
 
-  //  Posizione eretta
+  //  Posizione eretta senza presa
 
   angolo1 = 90.0;  //  Posizione di partenza
-  posizione1 = map(int(angolo1), 0, 180, SERVOMIN, SERVOMAX);  //  Da mettere sempre
-  pwm0.setPWM(mot1, 0, posizione1);  // Da mettere sempre
+  posizione1 = map(int(angolo1), 0, 180, SERVOMIN, SERVOMAX);
+  pwm0.setPWM(mot1, 0, posizione1);  
 
   angolo2 = 85.0;  //  Posizione di partenzamo
-  posizione2 = map(int(angolo2), 0, 180, SERVOMIN, SERVOMAX); //  Accetta solo valori interi
+  posizione2 = map(int(angolo2), 0, 180, SERVOMIN, SERVOMAX);
   pwm0.setPWM(mot2, 0, posizione2);
 
   angolo3 = 93.0;  //  Posizione di partenza
@@ -176,11 +188,11 @@ void eretta_con_presa() {
   // Posizione eretta con presa
     
     angolo1 = 90.0;  //  Posizione di partenza
-    posizione1 = map(int(angolo1), 0, 180, SERVOMIN, SERVOMAX);  //  Da mettere sempre
+    posizione1 = map(int(angolo1), 0, 180, SERVOMIN, SERVOMAX);  
     pwm0.setPWM(mot1, 0, posizione1);  // Da mettere sempre
 
-    angolo2 = 85.0;  //  Posizione di partenzamo
-    posizione2 = map(int(angolo2), 0, 180, SERVOMIN, SERVOMAX); //  Accetta solo valori interi
+    angolo2 = 85.0;  //  Posizione di partenza
+    posizione2 = map(int(angolo2), 0, 180, SERVOMIN, SERVOMAX); 
     pwm0.setPWM(mot2, 0, posizione2);
 
     angolo3 = 93.0;  //  Posizione di partenza
@@ -206,8 +218,6 @@ void eretta_con_presa() {
 // Funzione che prende
 
 void prendi() {
-
-  // Presa
 
   //  Ciclo per la base
   
@@ -262,7 +272,7 @@ void prendi() {
 
   for(int i = 1; i <= step; i ++) {
     angolo2 = angolo2 - (25.0 / step);
-    posizione2 = map(int(angolo2), 0, 180, SERVOMIN, SERVOMAX); //  Accetta solo valori interi
+    posizione2 = map(int(angolo2), 0, 180, SERVOMIN, SERVOMAX); 
     pwm0.setPWM(mot2, 0, posizione2);
 
     delay(20);
@@ -349,7 +359,7 @@ void posa() {
 
   for(int i = 1; i <= step; i ++) {
     angolo2 = angolo2 - (30.0 / step);
-    posizione2 = map(int(angolo2), 0, 180, SERVOMIN, SERVOMAX); //  Accetta solo valori interi
+    posizione2 = map(int(angolo2), 0, 180, SERVOMIN, SERVOMAX);
     pwm0.setPWM(mot2, 0, posizione2);
 
     delay(20);
@@ -383,38 +393,46 @@ void posa() {
 
 void loop() {
 
-  if (x == 0) {
+  if (haiBallato == false) {
+    
     balletto();
-    x = 1;
+    haiBallato = true;
+    
   }
   else {
 
-    carico = digitalRead(carico_pin);
-  scarico = digitalRead(scarico_pin);
+    carico = digitalRead(carico_pin); 
+    scarico = digitalRead(scarico_pin);
 
-  /* Serial.print("Carico: ");
-  Serial.print(carico);
-  Serial.print("Scarico: ");
-  Serial.print(scarico);
-  delay(2000);  */
+    /* Serial.print("Carico: ");
+    Serial.print(carico);
+    Serial.print("Scarico: ");
+    Serial.print(scarico);
+    delay(2000);  */
 
   
 
-  if (carico == 1) {
-    eretta_senza_presa();
+    if (carico == 1) {
+      
+      eretta_senza_presa();
+      
+    }
+    else if (carico == 0 && scarico == 1) {
+      
+      eretta_senza_presa();
+      prendi();
+      eretta_con_presa();
+      posa();
+      eretta_senza_presa();
+      
+    }
+    else if (carico == 0 && scarico == 0 ) {
+      
+      eretta_senza_presa();
+      
+    }
+  
   }
-  else if (carico == 0 && scarico == 1) {
-    eretta_senza_presa();
-    prendi();
-    eretta_con_presa();
-    posa();
-    eretta_senza_presa();
-  }
-  else if (carico == 0 && scarico == 0 ) {
-    eretta_senza_presa();
-  }
-
-  }
-
+  
 }
   
