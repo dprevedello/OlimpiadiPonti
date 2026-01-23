@@ -1,0 +1,151 @@
+#include <Servo.h>
+/*
+@Samuel ouerghammi
+#23/01/2026 v1.4
+
+Controllo le ruote sinistra e destra tramite Servo. leftServo e rightServo
+
+Collegati tramite pin: sinistro = 8 e destro = 9
+
+
+*/
+
+
+Servo leftServo;
+Servo rightServo;
+
+
+const int leftServoPin = 8;
+const int rightServoPin = 9;
+
+/*
+sensori di linea 
+
+*/
+const int leftLinePin   = A2;
+const int centerLinePin = A1;
+const int rightLinePin  = A0;
+
+/* CALIBRO COLORE NERO=ALTO E BIANCO=BASSO per evitare che il robottino esca dal ring DA CALIBRARE
+ * 
+ * 
+*/
+const int LINE_THRESHOLD = 600; 
+
+/*
+Ultrasuoni davanti sx e dx
+
+*/
+const int trigFront = 4;
+const int echoFront = 23;
+
+const int trigLeft  = 3;
+const int echoLeft  = 22;
+
+const int trigRight = 2;
+const int echoRight = 10;
+
+//raggio distanza vista robot nemico in cm
+const int ENEMY_DISTANCE = 25; 
+
+
+/* 
+funzioni di movimento
+
+*/
+
+// Ferma entrambi i motori
+void stopMotors() {
+  leftServo.write(90);   // 90 = stop servo continuo
+  rightServo.write(90);
+}
+
+// vai dritto
+void forward() {
+  leftServo.write(120);   // avanti ruota sinistra
+  rightServo.write(60);   // avanti ruota destra
+}
+
+// Va indietro
+void backward() {
+  leftServo.write(60);
+  rightServo.write(120);
+}
+
+// gira a sx da fermo
+void turnLeft() {
+  leftServo.write(60);
+  rightServo.write(60);
+}
+
+// gira a dx da fermo
+void turnRight() {
+  leftServo.write(120);
+  rightServo.write(120);
+}
+
+/*
+lettura ultrasuoni:
+
+La funzione getDistance ci permette di misurare la distanza dal nemico tramite ultrasuoni
+tengo dei delay bassi per non perdere tempo. Se non ricevo nulla ritorna una distanza enorme  || duration * formula in ps(ultrasuoni)
+*/
+long getDistance(int trig, int echo) {
+  digitalWrite(trig, LOW);
+  delayMicroseconds(2);
+  digitalWrite(trig, HIGH);
+  delayMicroseconds(10);
+  digitalWrite(trig, LOW);
+  long duration = pulseIn(echo, HIGH, 6000);
+  if (duration == 0) return 999;
+  return duration * 0.034 / 2;
+}
+
+void setup() {
+
+  // Collega i servo ai rispettivi pin e imposto i pin degli ultrasuoni
+  leftServo.attach(leftServoPin);
+  rightServo.attach(rightServoPin);
+  pinMode(trigFront, OUTPUT);
+  pinMode(trigLeft, OUTPUT);
+  pinMode(trigRight, OUTPUT);
+  pinMode(echoFront, INPUT);
+  pinMode(echoLeft, INPUT);
+  pinMode(echoRight, INPUT);
+ // delay obbligatorio per regolamento della gara
+  stopMotors();
+  delay(5000);
+}
+void loop() {
+  int leftLine   = analogRead(leftLinePin);    // sensore sinistro
+  int centerLine = analogRead(centerLinePin);  // sensore centrale
+  int rightLine  = analogRead(rightLinePin);   // sensore destro
+
+  // Se il valore è sotto la soglia ci stiamo avvicinando troppo al bordo ring(bianco) DA CALIBRARE IN ALTO
+  bool leftWhite   = leftLine   < LINE_THRESHOLD;
+  bool centerWhite = centerLine < LINE_THRESHOLD;
+  bool rightWhite  = rightLine  < LINE_THRESHOLD;
+  if (centerWhite || leftWhite || rightWhite) { //allontanamento dal bordo ring
+    backward();
+    delay(80);
+    // Si gira verso il lato opposto al bordo
+    if (leftWhite) {turnRight();}else if (rightWhite) {turnLeft();}else {turnRight();} // bordo centrale
+    delay(100);
+    return; // esce dal loop e rincomincia
+  }
+
+  long dFront = getDistance(trigFront, echoFront); // davanti distanza
+  long dLeft  = getDistance(trigLeft, echoLeft);   // sinistra distanza
+  long dRight = getDistance(trigRight, echoRight); // destra distanza
+
+ /* ATTACCHI FRONTALI LATERALI  ETC*/
+  if (dFront < ENEMY_DISTANCE) {forward();return;}
+  if (dLeft < ENEMY_DISTANCE) {turnLeft();return;}
+  if (dRight < ENEMY_DISTANCE) {turnRight();return;}
+
+  // gira e cerca
+  turnRight();
+  delay(500);
+  turnLeft();
+  delay(500);
+}
