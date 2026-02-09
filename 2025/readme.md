@@ -1,1 +1,0 @@
-# Olimpiadi 2025
